@@ -1,0 +1,87 @@
+.header {
+  background: linear-gradient(to right, #ff8a00, #ffa500);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.header__logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.header__menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.header__menu > li {
+  margin-left: 20px;
+  position: relative;
+}
+
+.header__menu > li a {
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.header__menu > li a.active {
+  color: #765a3a;
+}
+
+.header__menu > li a:hover {
+  color: #252321;
+}
+
+.header__menu-sub {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-width: 150px;
+  background: #ffa500;
+  display: none;
+}
+
+.header__menu > li:hover .header__menu-sub {
+  display: inline-block;
+}
+
+.header__menu-sub li {
+  padding: 10px;
+  border-bottom: 1px solid #000;
+}
+
+.footer {
+  background: #ff8a00;
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+}
+
+.log_out_button {
+  background-color: transparent;
+  border: none;
+  color: #272727;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  border-bottom: 1px solid #000;
+
+}
+
+.log_out_button:hover {
+  color: #0056b3;
+}
