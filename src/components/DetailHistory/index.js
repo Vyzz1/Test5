@@ -11,7 +11,7 @@ function DetailHistory() {
   const [questions, SetQuestions] = useState([]);
   const fectchApi = async (topicNum) => {
     const response = await fetch(
-      `http://localhost:3002/questions/?topicId=${topicNum}`
+      `https://json-demo-sigma.vercel.app/questions/?topicId=${topicNum}`
     );
     const result = await response.json();
     if (result) {

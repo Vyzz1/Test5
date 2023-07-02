@@ -14,7 +14,7 @@ function Topics() {
   );
   const [categoryResult, setCategory] = useState([]);
   const fectchApi = async () => {
-    const response = await fetch("http://localhost:3002/topics");
+    const response = await fetch("https://json-demo-sigma.vercel.app/topics");
     const result = await response.json();
     if (getCookie("token")) {
       setCategory(result);

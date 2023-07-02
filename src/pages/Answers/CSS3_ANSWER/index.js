@@ -6,7 +6,9 @@ import RevealAnswer from "../../../components/RevealAnswer";
 function CSS3_ANSWER() {
   const [questions, setQuestions] = useState([]);
   const fectchApi = async () => {
-    const response = await fetch("http://localhost:3002/questions/?topicId=2");
+    const response = await fetch(
+      "https://json-demo-sigma.vercel.app/questions/?topicId=2"
+    );
     const result = await response.json();
     if (result) {
       setQuestions(result);

@@ -10,7 +10,9 @@ function JAVASCRIPT_PAGE() {
   const dispatch = useDispatch();
   const [questions, setQuestions] = useState([]);
   const fectchApi = async () => {
-    const response = await fetch("http://localhost:3002/questions/?topicId=3");
+    const response = await fetch(
+      "https://json-demo-sigma.vercel.app/questions/?topicId=3"
+    );
     const result = await response.json();
     if (result) {
       setQuestions(result);
