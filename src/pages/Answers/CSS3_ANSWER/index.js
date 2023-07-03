@@ -7,7 +7,7 @@ function CSS3_ANSWER() {
   const [questions, setQuestions] = useState([]);
   const fectchApi = async () => {
     const response = await fetch(
-      "https://json-demo-sigma.vercel.app/questions/?topicId=2"
+      "https://api-quizz-one.vercel.app/questions?topicId=2"
     );
     const result = await response.json();
     if (result) {

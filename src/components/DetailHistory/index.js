@@ -1,62 +1,51 @@
 import { useParams } from "react-router";
 import RevealAnswer from "../RevealAnswer";
 import { useEffect, useState } from "react";
-
+import { useSelector } from "react-redux";
 function DetailHistory() {
   const { date } = useParams();
-  const historyData = JSON.parse(localStorage.getItem("history"));
-  const currentData = historyData.find(
-    (value) => parseInt(value.Date) === parseInt(date)
-  );
-  const [questions, SetQuestions] = useState([]);
-  const fectchApi = async (topicNum) => {
-    const response = await fetch(
-      `https://json-demo-sigma.vercel.app/questions/?topicId=${topicNum}`
-    );
-    const result = await response.json();
-    if (result) {
-      return result;
-    }
+  const [user_data, setUserData] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const id = useSelector((state) => state.QuestionsHS);
+  const fetchApi2 = () => {
+    fetch(`https://api-quizz-one.vercel.app/questions?topicId=${id}`)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result) {
+          setQuestions(result);
+        }
+      });
+  };
+  const fetchApi1 = () => {
+    fetch(`https://api-quizz-one.vercel.app/history?Date=${date}`)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result) {
+          setUserData(result);
+        }
+      });
   };
   useEffect(() => {
-    const fetchData = async () => {
-      let topicNum;
-      switch (currentData.Topic) {
-        case "HTML5":
-          topicNum = "1";
-          break;
-        case "CSS3":
-          topicNum = "2";
-          break;
-        case "JAVASCRIPT":
-          topicNum = "3";
-          break;
-        case "REACTJS":
-          topicNum = "4";
-          break;
-        // Thêm các case cho các chủ đề khác
-        default:
-          topicNum = "";
-          break;
-      }
+    fetchApi1();
+    fetchApi2();
+  }, []);
 
-      const result = await fectchApi(topicNum);
-      SetQuestions(result);
+  let body = {};
+  let answers = [];
+  if (user_data.length > 0) {
+    body = {
+      selectedAnswers: user_data[user_data.length - 1].answers,
+      count: user_data[user_data.length - 1].count,
+      button: "None",
     };
-
-    fetchData();
-  }, [currentData.Topic]);
-  let body = {
-    selectedAnswers: currentData.SelectedAnswers,
-    count: currentData.Count,
-    button: "None",
-  };
-  let answers = [body];
-  console.log(answers);
+    answers = [body];
+  }
 
   return (
     <>
-      <RevealAnswer answers={answers} questions={questions} />
+      {user_data.length > 0 && (
+        <RevealAnswer answers={answers} questions={questions} />
+      )}
     </>
   );
 }

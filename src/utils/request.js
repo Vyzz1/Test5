@@ -1,9 +1,11 @@
-const DOMAIN = `https://json-demo-sigma.vercel.app/`;
+export const DOMAIN = "https://api-quizz-one.vercel.app/";
 
 export const get = async (path) => {
   const response = await fetch(DOMAIN + path);
   const result = await response.json();
-  return result;
+  if (result) {
+    return result;
+  }
 };
 
 export const post = async (path, options) => {

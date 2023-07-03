@@ -13,7 +13,7 @@ function Login() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const fectchApi = async () => {
-    const response = await fetch("https://json-demo-sigma.vercel.app/users");
+    const response = await fetch("https://api-quizz-one.vercel.app/users");
     const result = await response.json();
     if (result) {
       setData(result);

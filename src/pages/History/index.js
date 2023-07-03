@@ -1,8 +1,11 @@
 import "./History.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { formatDateTime } from "../../utils/request";
 import { getCookie } from "../../GetCookie";
 import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
+import { history_answers } from "../../action/post_answers";
+import { useDispatch } from "react-redux";
 
 function History() {
   const navigate = useNavigate();
@@ -16,9 +19,8 @@ function History() {
     });
     setTimeout(() => navigate("/login"), 2300);
   }
-  var infoCookie = getCookie("info");
-  var infoObject = JSON.parse(infoCookie);
-  const data = JSON.parse(localStorage.getItem("history"));
+  const dispatch = useDispatch();
+
   function countTopic(array, topic) {
     let count = 0;
     for (let i = 0; i < array.length; i++) {
@@ -28,35 +30,63 @@ function History() {
     }
     return count;
   }
-  let user_history = [];
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].User_id === infoObject.id) {
-      user_history.push(data[i]);
-    }
-  }
 
+  const handleOnClick = (topic, date) => {
+    let topicNum;
+    switch (topic) {
+      case "HTML5":
+        topicNum = 1;
+        break;
+      case "CSS3":
+        topicNum = 2;
+        break;
+      case "JAVASCRIPT":
+        topicNum = 3;
+        break;
+      case "REACTJS":
+        topicNum = 4;
+        break;
+      default:
+        break;
+    }
+    dispatch(history_answers(topicNum));
+    navigate("/history/" + date);
+  };
   const error_styles = {
     textAlign: "center",
     fontSize: "20px",
     color: "#847e7e80",
     fontWeight: "650",
   };
-  // console.log(user_history);
+  const current_info = JSON.parse(getCookie("info"));
+
+  const [data, setData] = useState([]);
+  const fetchApi = () => {
+    fetch(`https://api-quizz-one.vercel.app/history?user_id=${current_info.id}`)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result) {
+          setData(result);
+        }
+      });
+  };
+  useEffect(() => {
+    fetchApi();
+  }, []);
+  const handleTakingQuizz = (topic) => {
+    let temp = topic.toLowerCase();
+    console.log(temp);
+    navigate(`/quizz/${temp}`);
+  };
   return (
     <>
-      {user_history.length > 0 ? (
+      {data.length > 0 ? (
         <>
           <div className="box-header">
             <div className="title"> LỊCH SỬ LÀM BÀI</div>
             <div className="description">
-              <div>
-                {" "}
-                Tên: {user_history[user_history.length - 1].info.fullName}{" "}
-              </div>
-              <div>
-                {" "}
-                Email: {user_history[user_history.length - 1].info.email}
-              </div>
+              <div> Tên: {current_info.fullName} </div>
+              <div> Email: {current_info.email}</div>
             </div>
           </div>
           <table align="center">
@@ -67,19 +97,32 @@ function History() {
                 <td> Kết quả </td>
                 <td> Chi tiết </td>
                 <td> Thời gian </td>
+                <td> Làm lại </td>
               </tr>
-              {user_history.map((value, index) => {
+              {data.map((value, index) => {
                 return (
                   <tr key={index}>
                     <td> {index + 1} </td>
                     <td> {value.Topic} </td>
                     <td>
-                      {value.Count} / {value.SelectedAnswers.length}
+                      {value.count} / {value.answers.length}
                     </td>
                     <td>
-                      <Link to={"/history/" + value.Date}> Link </Link>
+                      <button
+                        onClick={() => handleOnClick(value.Topic, value.Date)}
+                      >
+                        {" "}
+                        Link{" "}
+                      </button>
                     </td>
                     <td> {formatDateTime(value.Date)} </td>
+                    <td>
+                      {" "}
+                      <button onClick={() => handleTakingQuizz(value.Topic)}>
+                        {" "}
+                        Làm lại{" "}
+                      </button>{" "}
+                    </td>
                   </tr>
                 );
               })}
@@ -88,13 +131,13 @@ function History() {
           <div className="thongke">
             Số lượt làm bài
             <div className="description_thongke">
-              HTML5: {countTopic(user_history, "HTML5")}
+              HTML5: {countTopic(data, "HTML5")}
             </div>
-            CSS3: {countTopic(user_history, "CSS3")}
+            CSS3: {countTopic(data, "CSS3")}
             <div className="description_thongke">
-              JAVASCRIPT: {countTopic(user_history, "JAVASCRIPT")}
+              JAVASCRIPT: {countTopic(data, "JAVASCRIPT")}
             </div>
-            REACTJS: {countTopic(user_history, "REACTJS")}
+            REACTJS: {countTopic(data, "REACTJS")}
           </div>
         </>
       ) : (
